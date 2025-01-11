@@ -1,7 +1,7 @@
 import * as THREE from "three";
-import { getDiceRandomValue } from "./randomValues";
+import { getDiceRandomValue, convertRandomValue } from "./randomValues";
 
-const div = document.querySelector(".section-one");
+const diceSection = document.querySelector(".section-one");
 const imagURLArray = [
   "/one.png",
   "/two.png",
@@ -11,8 +11,8 @@ const imagURLArray = [
   "/six.png",
 ];
 const cubeSizes = {
-  width: div.clientWidth,
-  height: div.clientHeight,
+  width: diceSection.clientWidth,
+  height: diceSection.clientHeight,
 };
 
 let cubeMaterials = [];
@@ -32,7 +32,7 @@ const camera = new THREE.PerspectiveCamera(
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(cubeSizes.width, cubeSizes.height);
 
-div.appendChild(renderer.domElement);
+diceSection.appendChild(renderer.domElement);
 
 const geometry = new THREE.BoxGeometry(1, 1, 1);
 
@@ -49,42 +49,61 @@ const cube = new THREE.Mesh(geometry, cubeMaterials);
 scene.add(cube);
 
 camera.position.z = 5;
+camera.position.y = 0.8;
+camera.position.x = -0.1;
+camera.rotation.z = 8 * THREE.MathUtils.DEG2RAD;
 
-function rotationAnimation() {
-  console.log("first");
-  cube.rotation.x = cube.rotation.x + 0.1;
-  cube.rotation.y = cube.rotation.y + 0.1;
-  cube.rotation.z = cube.rotation.z + 0.1;
-  setTimeout(() => {
-    console.log("second");
-
-    cube.rotation.x = Math.PI;
-    cube.rotation.y = Math.PI / 2;
-    cube.rotation.z = Math.PI / 1.1;
-
-  }, 2000);
-  renderer.render(scene, camera);
-}
 const exesHelper = new THREE.AxesHelper(5);
 scene.add(exesHelper);
 
 function animate() {
-  cube.rotation.x = Math.PI / 2;
-  cube.rotation.y = Math.PI;
-  cube.rotation.z = Math.PI / 1.1;
+  const diceState = diceSection.getAttribute("data-state");
+
+  if (diceState === "rotation") {
+    console.log("rotation");
+    cube.rotation.x += Math.PI / 28;
+    cube.rotation.y += Math.PI / 28;
+    cube.rotation.z += Math.PI / 28;
+    if (cube.rotation.x >= Math.PI * 4) {
+      console.log(cube.rotation.x);
+      console.log(Math.PI * 4);
+      diceSection.setAttribute("data-state", "stop");
+    }
+  }
+
+  if (diceState === "default") {
+    cube.rotation.x = 0;
+    cube.rotation.y = 0;
+    cube.rotation.z = 0;
+  }
+  if (diceState === "stop") {
+    const randomValue = diceSection.getAttribute("data-value");
+    const randomValueObj = convertRandomValue(Number(randomValue))
+    if (cube.rotation.x >= randomValueObj.x) {
+      cube.rotation.x -= Math.PI / 32;
+    }
+    if (cube.rotation.y >= randomValueObj.y) {
+      cube.rotation.y -= Math.PI / 32;
+    }
+    if (cube.rotation.z >= randomValueObj.z) {
+      cube.rotation.z -= Math.PI / 32;
+    }
+  }
+
   renderer.render(scene, camera);
 }
 renderer.setAnimationLoop(animate);
 
-div.addEventListener("click", (event) => {
-  renderer.setAnimationLoop(rotationAnimation);
-});
-
 window.addEventListener("resize", () => {
-  cubeSizes.width = div.clientWidth;
-  cubeSizes.height = div.clientHeight;
+  cubeSizes.width = diceSection.clientWidth;
+  cubeSizes.height = diceSection.clientHeight;
   camera.aspect = cubeSizes.width / cubeSizes.height;
   camera.updateProjectionMatrix();
   renderer.setSize(cubeSizes.width, cubeSizes.height);
   renderer.render(scene, camera);
+});
+
+diceSection.addEventListener("click", () => {
+  diceSection.setAttribute("data-state", "rotation");
+  diceSection.setAttribute("data-value", `${getDiceRandomValue()}`);
 });
