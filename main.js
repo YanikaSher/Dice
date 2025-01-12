@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { getDiceRandomValue, convertRandomValue } from "./randomValues";
 
 const diceSection = document.querySelector(".section-one");
+const diceOutput = document.querySelector(".dice-output");
 const imagURLArray = [
   "/one.png",
   "/two.png",
@@ -16,6 +17,8 @@ const cubeSizes = {
 };
 
 let cubeMaterials = [];
+
+const diceState = diceSection.getAttribute("data-state");
 const backgroundColor = new THREE.Color("rgb(28, 39, 59)");
 const d6CubeColor = new THREE.Color("rgb(237, 229, 203)");
 
@@ -57,28 +60,24 @@ const exesHelper = new THREE.AxesHelper(5);
 scene.add(exesHelper);
 
 function animate() {
-  const diceState = diceSection.getAttribute("data-state");
-
-  if (diceState === "rotation") {
-    console.log("rotation");
+  const currentDiceState = diceSection.getAttribute("data-state");
+  if (currentDiceState === "rotation") {
     cube.rotation.x += Math.PI / 28;
     cube.rotation.y += Math.PI / 28;
     cube.rotation.z += Math.PI / 28;
     if (cube.rotation.x >= Math.PI * 4) {
-      console.log(cube.rotation.x);
-      console.log(Math.PI * 4);
       diceSection.setAttribute("data-state", "stop");
     }
   }
 
-  if (diceState === "default") {
+  if (currentDiceState === "default") {
     cube.rotation.x = 0;
     cube.rotation.y = 0;
     cube.rotation.z = 0;
   }
-  if (diceState === "stop") {
+  if (currentDiceState === "stop") {
     const randomValue = diceSection.getAttribute("data-value");
-    const randomValueObj = convertRandomValue(Number(randomValue))
+    const randomValueObj = convertRandomValue(Number(randomValue));
     if (cube.rotation.x >= randomValueObj.x) {
       cube.rotation.x -= Math.PI / 32;
     }
@@ -87,6 +86,14 @@ function animate() {
     }
     if (cube.rotation.z >= randomValueObj.z) {
       cube.rotation.z -= Math.PI / 32;
+    }
+    if (
+      (cube.rotation.z < randomValueObj.z) |
+      (cube.rotation.y < randomValueObj.y) |
+      (cube.rotation.x < randomValueObj.x)
+    ) {
+      const output = diceSection.getAttribute("data-value");
+      diceOutput.textContent = `Output: ${output}`;
     }
   }
 
@@ -104,6 +111,8 @@ window.addEventListener("resize", () => {
 });
 
 diceSection.addEventListener("click", () => {
-  diceSection.setAttribute("data-state", "rotation");
-  diceSection.setAttribute("data-value", `${getDiceRandomValue()}`);
+  if (diceState !== "rotation") {
+    diceSection.setAttribute("data-state", "rotation");
+    diceSection.setAttribute("data-value", `${getDiceRandomValue()}`);
+  }
 });

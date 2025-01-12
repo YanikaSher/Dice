@@ -5,7 +5,6 @@ const range = maxDiceValue - minDiceValue + minDiceValue;
 function getDiceRandomValue() {
   const randomValue = Math.random() * range;
   const result= Math.ceil(randomValue)
-  console.log(result)
   return  result;
 }
 function convertRandomValue(randomValue) {

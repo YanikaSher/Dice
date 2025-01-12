@@ -5,39 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Test Three JS</title>
   </head>
-
   <body>
     <div class="main">
-      <section class="section-one" data-state="default"></section>
+      <section class="section-one" data-state="default">
+        <header class="dice-header">
+          <h1 class="dice-name">D6</h1>
+          <p class="dice-output">Output: 0</p>
+        </header>
+      </section>
       <section class="section-two"></section>
+      <link rel="stylesheet" href="style.css" />
     </div>
-    <style>
-      canvas {
-        height: 100%;
-        width: 100%;
-      }
-      .main {
-        display: flex;
-        width: 100%;
-        height: 100%;
-        flex-direction: row;
-      }
-      .section-one {
-
-        display: flex;
-        background-color: blue;
-        width: 50%;
-        height: 100vh;
-      }
-      .section-two {
-        width: 50%;
-
-        background-color: red;
-      }
-      body {
-        margin: 0px;
-      }
-    </style>
     <script type="module" src="/main.js"></script>
   </body>
 </html>
