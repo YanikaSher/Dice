@@ -3,19 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Test Three JS</title>
+    <title>Dnd</title>
   </head>
   <body>
-    <div class="main">
-      <section class="section-one" data-state="default">
-        <header class="dice-header">
-          <h1 class="dice-name">D6</h1>
-          <p class="dice-output">Output: 0</p>
-        </header>
-      </section>
-      <section class="section-two"></section>
-      <link rel="stylesheet" href="style.css" />
+    <div class="container">
+      <header>
+        <h1>Dice Table</h1>
+        <button class="button-get-result">Throw</button>
+        <div class="select-dices">
+          <input class="dice-input" type="text">
+        </div>
+        <div class="dice-value-output"></div>
+      </header>
+      <main>
+        <section class="dice-section">
+          <div class="dice-table"></div>
+          <div class="tools"></div>
+        </section>
+      </main>
     </div>
-    <script type="module" src="/main.js"></script>
+    <link rel="stylesheet" href="style.css" />
+    <script type="module" src="/dice.js"></script>
   </body>
 </html>
