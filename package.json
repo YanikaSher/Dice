@@ -4,6 +4,6 @@
     "@3d-dice/theme-dice-of-rolling": "^0.2.1"
   },
   "devDependencies": {
-    "vite": "^6.0.7"
+    "vite": "^6.2.3"
   }
 }
